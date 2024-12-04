@@ -35,7 +35,8 @@ class CardTwo extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: List.generate(
-                    3,
+                    stackState.mockDataModel?.items?[1].openState
+                          ?.body?.items?.length ?? 0,
                     (index) {
                       final data = stackState.mockDataModel?.items?[1].openState
                           ?.body?.items?[index];

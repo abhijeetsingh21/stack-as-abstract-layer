@@ -1,8 +1,8 @@
+import 'dart:developer';
+
 import 'package:cred_demo_application/feature/abstraction/model/card_data_model.dart';
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:dio/dio.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
@@ -13,7 +13,7 @@ class DioClient {
   DioClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://api.mocklets.com/p6764/test_mint', 
+        // baseUrl: 'https://api.mocklets.com/p6764/test_mint',
         connectTimeout: const Duration(seconds: 15), // Connection timeout
         receiveTimeout: const Duration(seconds: 20), // Response timeout
         headers: {
@@ -26,17 +26,19 @@ class DioClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          print('Request: ${options.uri}');
+          log('Request: ${options.uri}');
+          log('Extra: ${options.extra}');
+          log('QueryParameters: ${options.queryParameters}');
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          // the response 
-          print('Response: ${response.statusCode} - ${response.data}');
+          // the response
+          log('Response: ${response.statusCode} - ${response.data}');
           return handler.next(response);
         },
         onError: (error, handler) {
-          // Handle errors globally 
-          print('Error: ${error.message}');
+          // Handle errors globally
+          log('Error: ${error.message}');
           return handler.next(error);
         },
       ),
@@ -53,7 +55,6 @@ class DioClient {
 }
 
 class CardDataRepo {
-  
   static final _dio = DioClient().dio;
 
   static Future<MockApiModel?> getCardData() async {
@@ -64,14 +65,14 @@ class CardDataRepo {
       return data;
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
-        print('Connection timeout. Please try again later.');
+        log('Connection timeout. Please try again later.');
       } else if (e.type == DioExceptionType.receiveTimeout) {
-        print('Server took too long to respond. Please try again later.');
+        log('Server took too long to respond. Please try again later.');
       } else {
-        print('Something went wrong: ${e.message}');
+        log('Something went wrong: ${e.message}');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       return null;
     }
     return null;

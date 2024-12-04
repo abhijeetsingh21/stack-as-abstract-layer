@@ -21,6 +21,7 @@ class StackState extends ChangeNotifier {
       _mockDataModel = response;
 
       isLoading = false;
+      Fluttertoast.showToast(msg: 'Successful request');
       notifyListeners();
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
@@ -29,7 +30,7 @@ class StackState extends ChangeNotifier {
   }
 
   void toggleIndex(int index) {
-    if ( _expandedIndex == index) {
+    if (_expandedIndex == index) {
       _expandedIndex = -1;
     } else {
       _expandedIndex = index;
